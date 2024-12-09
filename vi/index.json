@@ -1,0 +1,106 @@
+[
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/",
+	"title": "Session Management",
+	"tags": [],
+	"description": "",
+	"content": "Làm việc với Amazon System Manager - Session Manager Tổng thể Trong phòng thí nghiệm này, bạn sẽ tìm hiểu các nguyên tắc cơ bản về triển khai quy trình ETL bằng cách sử dụng Amazon Kinesis Data Streams, AWS Lambda và Amazon S3. Bạn sẽ thiết lập quy trình truyền dữ liệu theo thời gian thực, trong đó dữ liệu được Kinesis thu thập, xử lý bởi Lambda, sau đó được lưu trữ trong S3 để phân tích thêm hoặc lưu trữ lâu dài.\nNội dung Introduction Prerequisites-setup Setting-create-s3 Setting-up-kinesis Logging-with-cloudwatch Cleaning-up-resources "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/1-introduce/",
+	"title": "Giới thiệu",
+	"tags": [],
+	"description": "",
+	"content": "Xây dựng Hệ thống truyền dữ liệu theo thời gian thực bằng AWS Kinesis, Hàm Lambda và Nhóm S3 là một phương pháp phi máy chủ để trích xuất, chuyển đổi và tải dữ liệu (ETL) trong thời gian thực. Trong thiết lập này, Amazon Kinesis Data Streams thu thập dữ liệu phát trực tuyến, AWS Lambda xử lý và chuyển đổi dữ liệu đó, đồng thời, kết quả đầu ra cuối cùng được lưu trữ trong bộ chứa Amazon S3 để phân tích thêm hoặc lưu trữ lâu dài.\nBằng cách sử dụng hệ thống này, bạn đạt được một số lợi thế so với các phương pháp truyền thống:\n-Không cần quản lý máy chủ: AWS Lambda tự động thay đổi quy mô dựa trên khối lượng dữ liệu đến từ luồng Kinesis, loại bỏ nhu cầu quản lý máy chủ. -Xử lý dữ liệu theo thời gian thực: Dữ liệu được xử lý ngay khi đến Kinesis, cho phép chuyển đổi và hiểu biết ngay lập tức. -Hiệu quả về chi phí: Bạn chỉ trả tiền cho những gì bạn sử dụng với AWS Lambda và S3, giảm chi phí chung liên quan đến cơ sở hạ tầng máy chủ truyền thống. -Bảo mật nâng cao: Dữ liệu được xử lý trong môi trường an toàn, giảm rủi ro như lộ cổng hoặc quản lý khóa SSH. -Giám sát toàn diện: AWS CloudWatch tích hợp liền mạch, cung cấp nhật ký và số liệu chi tiết để có được khả năng hiển thị đầy đủ về quy trình ETL. -Dễ truy cập: Dữ liệu đã xử lý được lưu trữ trong Amazon S3, tích hợp tốt với các dịch vụ AWS khác cho nhu cầu lưu trữ hoặc phân tích sâu hơn.\n-Bằng cách tận dụng Kinesis, Lambda và S3, bạn tạo ra giải pháp an toàn, tiết kiệm chi phí và có thể mở rộng để xử lý quy trình làm việc ETL theo thời gian thực mà không gặp phải sự phức tạp như quản lý cơ sở hạ tầng truyền thống.\n"
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/4-setting-up-kinesis/4.1-create-kinesis-data/",
+	"title": "Tạo dữ liệu Kinesis",
+	"tags": [],
+	"description": "",
+	"content": "Tạo dữ liệu Kinesis Đi tới Tạo Kinesis Tìm kiếm Kinesis. Nhấn Tạo luồng dữ liệu. Đi tới Cấu hình luồng dữ liệu Tên: jinmeister-data-stream. Bấm vào Được cung cấp. Phân đoạn được cung cấp: 2. Đi tới jinmeister-data-stream So sánh Tạo Kinesis\nBấm vào Cấu hình\nBấm Mã hóa và bấm Chỉnh sửa Nhấp vào Bật mã hóa phía máy chủ\nBấm vào Lưu thay đổi\n"
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/3-setting-create-s3/3.1-create-s3/",
+	"title": "Tao S3",
+	"tags": [],
+	"description": "",
+	"content": " Đi tới Tạo S3 Nhấn vào S3. Bấm vào Tạo nhóm. Tên jinmeister-datasource. Bấm vào Enable. "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/4-setting-up-kinesis/4.2-update-lambda/",
+	"title": "Cập nhật Lambda",
+	"tags": [],
+	"description": "",
+	"content": "Trong bước này, chúng tôi sẽ cập nhật lambda.\nCập nhật Lambda Đi tới Nhà sản xuất Lambada Sửa lại đoạn mã sau. const AWS = require(\u0026#39;aws-sdk\u0026#39;);\rAWS.config.update({\rregion: \u0026#34;us-east-1\u0026#34;\r});\rconst s3 = new AWS.S3();\rconst kinesis = new AWS.Kinesis();\rexport const handler = async (event) =\u0026gt; {\rconsole.log(JSON.stringify(event));\rconst bucketName = event.Records[0].s3.bucket.name;\rconst keyName = event.Records[0].s3.object.key; const params = {\rBucket: bucketName,\rKey: keyName\r};\rawait s3.getObject(params).promise().then(async (data) =\u0026gt; { const dataString = data.Body.toString();\rconst payload = {\rdata: dataString\r};\rawait sendToKinesis(payload, keyName);\r}, error =\u0026gt; {\rconsole.error(error);\r});\r};\rasync function sendToKinesis(payload, partitionKey) {\rconst params = {\rData: JSON.stringify(payload),\rPartitionKey: partitionKey,\rStreamName: \u0026#39;demo-datasrc-stream\u0026#39;\r};\rawait kinesis.putRecord(params).promise().then(response =\u0026gt; {\rconsole.log(response);\r}, error =\u0026gt; {\rconsole.error(error);\r});\r} 2.Đi đến Lambda Consumer#1 và Lambda Consumer#2\nSửa code Consumer#1 và cConsumer#2 Thay thế cusumer#1 bằng cusumer#2 export const handler = async (event) =\u0026gt; {\rconsole.log(JSON.stringify(event));\rfor (const record of event.Records) {\rconst data = JSON.parse(Buffer.from(record.kinesis.data,\u0026#39;base64\u0026#39;));\rconsole.log(\u0026#39;cusumer #1\u0026#39;,data);\r}\r}; export const handler = async (event) =\u0026gt; {\rconsole.log(JSON.stringify(event));\rfor (const record of event.Records) {\rconst data = JSON.parse(Buffer.from(record.kinesis.data,\u0026#39;base64\u0026#39;));\rconsole.log(\u0026#39;cusumer #2\u0026#39;,data);\r}\r}; 3.Thêm Kích hoạt\nVào Khách hàng Lambda#1 và Khách hàng Lambda#2 Bấm Thêm trình kích hoạt Bấm vào Mạng VPC "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/2-prerequiste/",
+	"title": "Chuẩn Bị",
+	"tags": [],
+	"description": "",
+	"content": "\rBạn cần chuẩn bị các tài nguyên ban đầu trên AWS bao gồm việc tạo IAM Role với quyền cần thiết cho Kinesis và Lambda Functions.\nĐể Lambda Function có thể quản lý và xử lý dữ liệu từ Kinesis cũng như lưu trữ dữ liệu vào S3, chúng ta cần thiết lập quyền IAM Role cho các dịch vụ này. Trong phần chuẩn bị này, chúng ta sẽ tạo một IAM Role trước để cấp quyền cho Lambda có thể làm việc với Kinesis và S3. Sau đó, chúng ta sẽ cấu hình các dịch vụ như Kinesis.\nNội Dung Tạo IAM Role Tao Lambda Functions "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/3-setting-create-s3/3.2-consumer-lambda-function/",
+	"title": "Hàm Lambda của người tiêu dùng",
+	"tags": [],
+	"description": "",
+	"content": " Đi tới Tạo S3.\nVào jinmeister-datasource. Bấm vào Thuộc tính Bấm vào Thông báo sự kiện Bấm vào Tạo thông báo sự kiện Đi tới Tạo thông báo sự kiện\nTên: data-upload/.txt . Nhấn vào Tất cả sự kiện tạo đối tượng. Nhấn vào Hàm Lambada. Bấm chọn từ hàm Lambda của bạn. Hàm Lambda: nhà sản xuất. "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/3-setting-create-s3/",
+	"title": "Cài đặt Tạo S3",
+	"tags": [],
+	"description": "",
+	"content": "Ở bước này, Nhóm S3: Bạn tạo một nhóm S3 có tên jinmeister-datasource. Nhóm được lập phiên bản, đảm bảo rằng các phiên bản đối tượng được lưu trữ. Mã hóa nhóm được kích hoạt để bảo mật dữ liệu ở trạng thái lưu trữ. Thông báo sự kiện: Trong S3, một thông báo sự kiện có tên là tải lên dữ liệu sẽ được tạo, thông báo này sẽ kích hoạt hàm Lambda của nhà sản xuất bất cứ khi nào tệp .txt mới được tải lên vùng lưu trữ. Thiết lập này đảm bảo rằng bất kỳ tệp mới tải lên nào cũng sẽ kích hoạt quá trình xử lý dữ liệu.\nNội dung -Create S3\n-Consumer Lambda Function\n"
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/4-setting-up-kinesis/",
+	"title": "Cài đặt Kinesis",
+	"tags": [],
+	"description": "",
+	"content": "Luồng Kinesis: Bạn tạo luồng dữ liệu có tên jinmeister-datasource-stream để xử lý dữ liệu từ Lambda. Kinesis được cấu hình để mở rộng quy mô dựa trên số lượng phân đoạn, cân bằng khả năng đọc và ghi. Mã hóa phía máy chủ được bật để bảo mật, đảm bảo rằng dữ liệu trong luồng được mã hóa.\nNội dung: Tạo Kinesis Cập nhật Lambda "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/5-logging-with-cloudwatch/",
+	"title": "Đăng nhập bằng CloudWatch",
+	"tags": [],
+	"description": "",
+	"content": "1.Tạo tệp mới Test.txt.\n2.Truy cập Amazon S3\nBấm vào Đối tượng.\nBấm vào Tải lên. Bấm vào Thêm tệp rồi bấm vào tệp test.file tệp đã tạo trước đó\nQuay lại lambda Nhà sản xuất Nhấp vào luồng nhật ký. Chọn luồng nhật ký có tính thời gian phù hợp với thời gian bạn upload file để kiểm tra. Quay lại lambda Cosumer#1 và consumer#2 Chọn luồng nhật ký có tính thời gian phù hợp với thời gian bạn upload file để kiểm tra. Một tệp mới đã được thêm thành công vào nhóm S3 "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/6-cleanup/",
+	"title": "Dọn dẹp tài nguyên",
+	"tags": [],
+	"description": "",
+	"content": "Chúng tôi sẽ thực hiện các bước sau để xóa tài nguyên mà chúng tôi đã tạo trong bài tập này.\nXóa nhóm S3 Truy cập Amazon S3 Bấm vào Trường hợp. Bấm vào Tên jinmeister-datasource. Nhập tên S3 rồi xóa. Bấm Xóa nhóm. Xóa Lambda Truy cập Lambda\nBấm vào Ứng dụng. Click chọn Nhà sản xuất, Người tiêu dùng#1 và Người tiêu dùng#2. Bấm vào Hành động rồi nhập Xóa. Xóa vai trò của tôi Bấm vào Vai trò. Bấm vào Tên vai tròdata-streaming-system-role rồi bấm vào Xóa, Nhập lại tên và xóa "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/2-prerequiste/2.2-lambda-functions/",
+	"title": "Tạo hàm Lambda",
+	"tags": [],
+	"description": "",
+	"content": "Tạo hàm Lambda Ở bước này, sau khi tạo Vai trò, chúng ta sẽ tạo Lambda, nhà sản xuất và chọn vai trò dữ liệu để thực hiện vai trò thực thi. Hàm này sẽ lắng nghe các sự kiện từ S3, đọc dữ liệu từ các đối tượng được tải lên trong S3 và gửi dữ liệu này đến luồng Kinesis. Hàm Lambda dành cho người tiêu dùng: Bạn tạo thêm hai hàm Lambda cho hai người tiêu dùng, khách hàng số 1 và khách hàng số 2, để xử lý dữ liệu từ luồng Kinesis.\nTruy cập Lambda Tìm kiếm Lambda. Nhấn Lambda, sau đó nhấn Tạo hàm để xác nhận. Đi tới Tạo chức năng Tạo:producer,customer#1,customer#2 /Tên: producer,customer#1,customer#2. Nhấp vào Node.js 20.x Nhấp vào Sử dụng vai trò hiện có Bấm vào data-streaming-system-role "
+},
+{
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/vi/2-prerequiste/2.1-create-iam-role/",
+	"title": "Tạo tôi",
+	"tags": [],
+	"description": "",
+	"content": "Trong bước này, chúng ta cần tạo vai trò IM, gán quyền cho S3 Full Access, Kinesis Full Access và CloudWatch Full Access. Gán vai trò dữ liệu cho cả ba hàm Lambda: Nhà sản xuất, Khách hàng#1 và Khách hàng#2 để đảm bảo quyền truy cập vào các dịch vụ cần thiết.\nTổng quan về kiến ​​trúc sau khi bạn hoàn thành bước này sẽ như sau:\nTạo vai trò IAM Đi tới Tạo vai trò Iam Bấm vào Iam. Bấm vào Tạo vai trò. Bấm vào Dịch vụ AWS, sau đó bấm vào Lambda để xác nhận. Đi tới Thêm quyền Nhấp vào CloudWatchFullAccess. Nhấp vào AmazonS3FullAccess. Nhấp vào AmazonKinesisFullAccess Đi tới Tên, đánh giá và tạo Tên data-streaming-system-role.. Bấm vào Tạo vai trò Nội dung Hàm Lambda "
+}]
