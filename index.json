@@ -1,104 +1,104 @@
 [
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/",
 	"title": "Session Management",
 	"tags": [],
 	"description": "",
 	"content": "Real-Time Data Processing with Kinesis, Lambda, and S3 Overall In this lab, you will learn the fundamentals of developing declarative ETL pipelines using Amazon Kinesis Data Streams, AWS Lambda, and Amazon S3. You\u0026rsquo;ll set up a real-time data streaming pipeline where data is collected by Kinesis, processed by Lambda, and then stored in S3 for additional analysis or long-term storage.\nContent Introduction Prerequisites-setup Setting-create-s3 Setting-up-kinesis Logging-with-cloudwatch Cleaning-up-resources "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/2-prerequiste/2.1-create-iam-role/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/2-prerequiste/2.1-create-iam-role/",
 	"title": "Create Iam",
 	"tags": [],
 	"description": "",
 	"content": "In this step, we need to create the IM role, assign permissions to S3 Full Access, Kinesis Full Access, and CloudWatch Full Access. Assign the data-role to all three Lambda functions: Producer, Customer#1, and Customer#2 to ensure access to the necessary services.\nThe architecture overview after you complete this step will be as follows:\nCreate IAM role Go to Create Iam Role Click Iam. Click Create Role. Click AWS service, then click Lambda to confirm. Go to Add permissionsn Click CloudWatchFullAccess. Click AmazonS3FullAccess. Click AmazonKinesisFullAccess Go to Name, review, and create Name data-streaming-system-role.. Click Create Role Content Lambda Functions "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/4-setting-up-kinesis/4.1-create-kinesis-data/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/4-setting-up-kinesis/4.1-create-kinesis-data/",
 	"title": "Create Kinesis Data",
 	"tags": [],
 	"description": "",
 	"content": "Create Kinesis Data Go to Create Kinesis Search Kinesis. Click Create data stream. Go to Data stream configuration Name: jinmeister-data-stream. Click Provisioned. Provisioned shards : 2. Go to jinmeister-data-stream Complate Create Kinesis\nClick Configuration\nClick Encryption and Click Edit Click Enable server-side encryption\nClick Save Changes\n"
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/3-setting-create-s3/3.1-create-s3/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/3-setting-create-s3/3.1-create-s3/",
 	"title": "Create S3",
 	"tags": [],
 	"description": "",
 	"content": " Go to Create S3. Click S3. Click Create bucket. Name jinmeister-datasource. Click Enbae. "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/1-introduce/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/1-introduce/",
 	"title": "Introduction",
 	"tags": [],
 	"description": "",
 	"content": "Building a Real-Time Data Streaming System with AWS Kinesis, Lambda Functions, and an S3 Bucket is a serverless approach for extracting, transforming, and loading (ETL) data in real-time. In this setup, Amazon Kinesis Data Streams capture streaming data, AWS Lambda processes and transforms that data, and the final output is stored in an Amazon S3 bucket for further analysis or long-term storage.\nBy using this system, you gain several advantages over traditional methods:\n-No server management: AWS Lambda automatically scales based on the volume of incoming data from Kinesis streams, eliminating the need to manage servers. -Real-time data processing: Data is processed as soon as it arrives in Kinesis, allowing for immediate transformations and insights. -Cost-effectiveness: You only pay for what you use with AWS Lambda and S3, reducing overhead costs associated with traditional server infrastructure. -Enhanced security: The data is processed in a secure environment, reducing risks like exposed ports or managing SSH keys. -Comprehensive monitoring: AWS CloudWatch integrates seamlessly, providing detailed logs and metrics for complete visibility of the ETL process. -Ease of access: Processed data is stored in Amazon S3, which integrates well with other AWS services for further analytics or archival needs.\n-By leveraging Kinesis, Lambda, and S3, you create a scalable, cost-effective, and secure solution for handling real-time ETL workflows without the complexity of traditional infrastructure management.\n"
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/3-setting-create-s3/3.2-consumer-lambda-function/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/3-setting-create-s3/3.2-consumer-lambda-function/",
 	"title": "Cosumer Lambda Function",
 	"tags": [],
 	"description": "",
 	"content": " Go to Create S3.\nGo to jinmeister-datasource. Click Properties Click Event Notifications Click Create event notification Go to Create Event Notification\nName: data-upload / .txt . Click All object create events. Click Lambada Function. Click choose from your Lambda function. Lambda function: producer. "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/2-prerequiste/2.2-lambda-functions/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/2-prerequiste/2.2-lambda-functions/",
 	"title": "Create Lambda Functions",
 	"tags": [],
 	"description": "",
 	"content": "Create Lambda Functions In this step, after creating Role, we will create Lambda, producer and select data-role to perform the execution role. This function will listen for events from S3, read data from objects uploaded in S3, and send this data to the Kinesis stream. Lambda function for consumers: You create two additional Lambda functions for two consumers, customer #1 and customer #2, to process data from the Kinesis stream.\nGo to Lambda Search Lambda. Click Lambda, then click Create a function to confirm. Go to Create function Create:producer,customer#1,customer#2 /Name: producer,customer#1,customer#2. Click Node.js 20.x Click Use an existing role Click data-streaming-system-role "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/2-prerequiste/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/2-prerequiste/",
 	"title": "Preparation",
 	"tags": [],
 	"description": "",
 	"content": "\rYou need to prepare the initial AWS resources, including creating an IAM Role with the necessary permissions for Kinesis and Lambda Functions.\nTo allow Lambda Functions to manage and process data from Kinesis and store data in S3, we need to set up an IAM Role that grants permissions for these services. In this preparation step, we will first create an IAM Role to ensure that Lambda has the required permissions to work with Kinesis and S3. After that, we will proceed to configure services like Kinesis.\nContent Create IAM Role Create Lambada Functions "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/4-setting-up-kinesis/4.2-update-lambda/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/4-setting-up-kinesis/4.2-update-lambda/",
 	"title": "Update Lambda",
 	"tags": [],
 	"description": "",
 	"content": "In this step, we will update lambda.\nUpdate Lambda Go to Lambada Producer Correct the following code. const AWS = require(\u0026#39;aws-sdk\u0026#39;);\rAWS.config.update({\rregion: \u0026#34;us-east-1\u0026#34;\r});\rconst s3 = new AWS.S3();\rconst kinesis = new AWS.Kinesis();\rexport const handler = async (event) =\u0026gt; {\rconsole.log(JSON.stringify(event));\rconst bucketName = event.Records[0].s3.bucket.name;\rconst keyName = event.Records[0].s3.object.key; const params = {\rBucket: bucketName,\rKey: keyName\r};\rawait s3.getObject(params).promise().then(async (data) =\u0026gt; { const dataString = data.Body.toString();\rconst payload = {\rdata: dataString\r};\rawait sendToKinesis(payload, keyName);\r}, error =\u0026gt; {\rconsole.error(error);\r});\r};\rasync function sendToKinesis(payload, partitionKey) {\rconst params = {\rData: JSON.stringify(payload),\rPartitionKey: partitionKey,\rStreamName: \u0026#39;demo-datasrc-stream\u0026#39;\r};\rawait kinesis.putRecord(params).promise().then(response =\u0026gt; {\rconsole.log(response);\r}, error =\u0026gt; {\rconsole.error(error);\r});\r} 2.Go to Lambda Consumer#1 and Lambda Consumer#2\nCorrect the code of Consumer#1 and cConsumer#2 Replace cusumer#1 with cusumer#2 export const handler = async (event) =\u0026gt; {\rconsole.log(JSON.stringify(event));\rfor (const record of event.Records) {\rconst data = JSON.parse(Buffer.from(record.kinesis.data,\u0026#39;base64\u0026#39;));\rconsole.log(\u0026#39;cusumer #1\u0026#39;,data);\r}\r}; export const handler = async (event) =\u0026gt; {\rconsole.log(JSON.stringify(event));\rfor (const record of event.Records) {\rconst data = JSON.parse(Buffer.from(record.kinesis.data,\u0026#39;base64\u0026#39;));\rconsole.log(\u0026#39;cusumer #2\u0026#39;,data);\r}\r}; 3.Add Trigger\nGo to Lambda Customer#1 and Lambda Customer#2 Click Add trigger Click VPC Lattice "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/3-setting-create-s3/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/3-setting-create-s3/",
 	"title": "Setting Create S3",
 	"tags": [],
 	"description": "",
 	"content": "In this step, S3 Bucket: You create an S3 bucket named jinmeister-datasource. The bucket is versioned, ensuring that object versions are stored. Bucket encryption is enabled to secure data at rest. Event Notifications: In S3, an event notification named data-upload is created, which triggers the producer Lambda function whenever a new .txt file is uploaded to the bucket. This setup ensures that any new file upload triggers data processing.\nContent -Create S3\n-Consumer Lambda Function\n"
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/4-setting-up-kinesis/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/4-setting-up-kinesis/",
 	"title": "System Kinesis",
 	"tags": [],
 	"description": "",
 	"content": "Kinesis Stream: You create a data stream named jinmeister-datasource-stream to handle data from Lambda. Kinesis is configured to scale based on the number of shards, balancing read and write capacity. Server-side encryption is enabled for security, ensuring that data within the stream is encrypted.\nContent: Create Kinesis Update Lambda "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/5-logging-with-cloudwatch/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/5-logging-with-cloudwatch/",
 	"title": "Logg With CloudWatch",
 	"tags": [],
 	"description": "",
 	"content": "1.Create new file Test.txt.\n2.Go to Amazon S3\nClick Objects.\nClick Upload. Click Add files then Click file test.file previously created file\nGo back lambda Producer Click log streams. Select a timed log stream that matches the time you uploaded the file to check. Go to back lambda Cosumer#1 and consumer#2 Select a timed log stream that matches the time you uploaded the file to check. A new file was successfully added to an S3 bucket "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/6-cleanup/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/6-cleanup/",
 	"title": "Clean up resources",
 	"tags": [],
 	"description": "",
 	"content": "We will take the following steps to delete the resources we created in this exercise.\nDelete S3 Bucket Go to Amazon S3 Click Instances. Click Name jinmeister-datasource. Enter the S3 name and then delete. Click Delete bucket. Delet Lambda Go to Lambda\nClick Applications. Click to select Producer, Consumer#1 and Consumer#2. Click Actions then enter Delete. Delete Iam role Click Roles. Click Roles namedata-streaming-system-role then Click Delete, Re-enter the name and delete "
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/categories/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/categories/",
 	"title": "Categories",
 	"tags": [],
 	"description": "",
 	"content": ""
 },
 {
-	"uri": "http://localhost:1313/Real-Time-Kinesis-Lambda--and-S3_WorkShop/tags/",
+	"uri": "https://tandung-dz.github.io/Real-Time-Kinesis-Lambda--and-S3_WorkShop/tags/",
 	"title": "Tags",
 	"tags": [],
 	"description": "",
